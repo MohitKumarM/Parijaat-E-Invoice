@@ -2261,7 +2261,7 @@ codeunit 50401 "ROBOAPI Call Cloud"
         if DGLEntryInfo.get(DtldGSTLedgEntry."Entry No.") then;
         CASE DGLEntryInfo."Original Doc. Type" OF
             DGLEntryInfo."Original Doc. Type"::Invoice:
-                BEGIN
+                BEGIN   //ashish
                     SalesInvoiceHeader.GET(DtldGSTLedgEntry."Document No.");
                     AlternateAddress.Reset();// 15800 
                     AlternateAddress.SetRange("Employee No.", 'PIPL');
