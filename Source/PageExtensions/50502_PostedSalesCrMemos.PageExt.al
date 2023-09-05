@@ -1,4 +1,4 @@
-pageextension 50502 PostedSalesCrMemos extends "Posted Sales Credit Memos"
+pageextension 50520 PostedSalesCrMemos extends "Posted Sales Credit Memos"
 {
     layout
     {

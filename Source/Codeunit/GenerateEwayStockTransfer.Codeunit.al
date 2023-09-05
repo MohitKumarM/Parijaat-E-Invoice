@@ -23,7 +23,7 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
         Country: Record 9;
         TrFromLocation: Record 14;
         DtldGSTLedgEntry2: Record "Detailed GST Ledger Entry";
-
+        AlternativeAdrees: Record "Alternative Address";
         CessVal: Decimal;
         CGSTVal: Decimal;
         IGSTVal: Decimal;
@@ -93,7 +93,7 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
             WriteToGlbTextVar('GENERATOR_GSTIN', '05AAACE1268K1ZR', 0, TRUE); // Test For UAT
             WriteToGlbTextVar('TRANSACTION_TYPE', 'Outward', 0, TRUE);
             WriteToGlbTextVar('TRANSACTION_SUB_TYPE', 'Supply', 0, TRUE);
-            WriteToGlbTextVar('SUPPLY_TYPE', 'Regular', 0, TRUE);
+            WriteToGlbTextVar('SUPPLY_TYPE', '', 0, TRUE); // 15800
             WriteToGlbTextVar('DOC_TYPE', 'Tax Invoice', 0, TRUE);
             WriteToGlbTextVar('DOC_NO', FORMAT(TransShipment."No."), 0, TRUE);
             WriteToGlbTextVar('DOC_DATE', FORMAT(TransShipment."Posting Date", 0, '<Day,2>-<Month Text,3>-<Year4>'), 0, TRUE);
@@ -118,18 +118,27 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
 
             Country.GET(TransShipment."Trsf.-to Country/Region Code");
             WriteToGlbTextVar('SHIP_COUNTRY', FORMAT(Country.Name), 0, TRUE);
+
             //WriteToGlbTextVar('ORIGIN_ADDRESS_LINE1',TrFromLocation.Address,0,TRUE);
-            TransFAdd := TrFromLocation.Address + ', ' + TrFromLocation."Address 2";
-            WriteToGlbTextVar('ORIGIN_ADDRESS_LINE1', TransFAdd, 0, TRUE);
-
-            State.GET(TrFromLocation."State Code");
-            // 15800 Open For Production WriteToGlbTextVar('ORIGIN_STATE', State.Description, 0, TRUE);
-            WriteToGlbTextVar('ORIGIN_STATE', 'Haryana', 0, TRUE); // Test For UAT
-
-            WriteToGlbTextVar('ORIGIN_CITY_NAME', TrFromLocation.City, 0, TRUE);
-            // 15800 Open For Production  WriteToGlbTextVar('ORIGIN_PIN_CODE', TrFromLocation."Post Code", 0, TRUE);
-            WriteToGlbTextVar('ORIGIN_PIN_CODE', '123401', 0, TRUE);  // Test For UAT
-
+            if TransShipment.Alternative <> '' then begin
+                AlternativeAdrees.Reset();
+                AlternativeAdrees.SetRange("Employee No.", 'PIPL');
+                AlternativeAdrees.SetRange(Code, TransShipment.Alternative);
+                if AlternativeAdrees.FindFirst() then begin
+                    WriteToGlbTextVar('ORIGIN_ADDRESS_LINE1', AlternativeAdrees.Address + ' ,' + AlternativeAdrees."Address 2", 0, TRUE);
+                    State.GET(AlternativeAdrees.EIN_State);
+                    WriteToGlbTextVar('ORIGIN_STATE', State.Description, 0, TRUE);
+                    WriteToGlbTextVar('ORIGIN_CITY_NAME', AlternativeAdrees.City, 0, TRUE);
+                    WriteToGlbTextVar('ORIGIN_PIN_CODE', AlternativeAdrees."Post Code", 0, TRUE);
+                end;
+            end else begin
+                TransFAdd := TrFromLocation.Address + ', ' + TrFromLocation."Address 2";
+                WriteToGlbTextVar('ORIGIN_ADDRESS_LINE1', TransFAdd, 0, TRUE);
+                State.GET(TrFromLocation."State Code");
+                WriteToGlbTextVar('ORIGIN_STATE', State.Description, 0, TRUE);
+                WriteToGlbTextVar('ORIGIN_CITY_NAME', TrFromLocation.City, 0, TRUE);
+                WriteToGlbTextVar('ORIGIN_PIN_CODE', TrFromLocation."Post Code", 0, TRUE);
+            end;
             //IF TransportMethod.GET(TransShipment."Transport Method") THEN
             //WriteToGlbTextVar('TRANSPORT_MODE','null',0,TRUE);
             WriteToGlbTextVar('TRANSPORT_MODE', 'null', 1, TRUE);

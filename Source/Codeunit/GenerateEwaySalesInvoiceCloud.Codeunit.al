@@ -105,7 +105,7 @@ codeunit 50400 "Generate EwaySalesInvoiceCloud"
                     WriteToGlbTextVar('TRANSACTION_SUB_TYPE', 'Export', 0, TRUE);
             END;
 
-            WriteToGlbTextVar('SUPPLY_TYPE', 'Regular', 0, TRUE);
+            WriteToGlbTextVar('SUPPLY_TYPE', '', 0, TRUE); // Regular 
 
             IF SalesInvoiceHeader."Invoice Type" IN [SalesInvoiceHeader."Invoice Type"::"Bill of Supply"] THEN
                 WriteToGlbTextVar('DOC_TYPE', 'Bill of Supply', 0, TRUE)
