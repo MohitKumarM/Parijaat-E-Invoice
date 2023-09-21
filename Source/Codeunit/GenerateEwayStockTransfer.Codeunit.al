@@ -125,7 +125,7 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
                 AlternativeAdrees.SetRange("Employee No.", 'PIPL');
                 AlternativeAdrees.SetRange(Code, TransShipment.Alternative);
                 if AlternativeAdrees.FindFirst() then begin
-                    WriteToGlbTextVar('ORIGIN_ADDRESS_LINE1', AlternativeAdrees.Address + ' ,' + AlternativeAdrees."Address 2", 0, TRUE);
+                    WriteToGlbTextVar('ORIGIN_ADDRESS_LINE1', AlternativeAdrees.Name + ' ,' + AlternativeAdrees.Address + ' ,' + AlternativeAdrees."Address 2", 0, TRUE);
                     State.GET(AlternativeAdrees.EIN_State);
                     WriteToGlbTextVar('ORIGIN_STATE', State.Description, 0, TRUE);
                     WriteToGlbTextVar('ORIGIN_CITY_NAME', AlternativeAdrees.City, 0, TRUE);
@@ -545,6 +545,258 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
         END;
 
     end;
+
+    procedure GenerateInvoiceDetailsJB(DocNo: Code[20]; DocType: Option " ",Payment,Invoice,"Credit Memo",Transfer,"Finance Charge Memo",Reminder,Refund,"Transfer Shipment","Transfer Receipt")
+    var
+        EinvoiceHttpContent: HttpContent;
+        EinvoiceHttpHeader: HttpHeaders;
+        EinvoiceHttpRequest: HttpRequestMessage;
+        EinvoiceHttpClient: HttpClient;
+        EinvoiceHttpResponse: HttpResponseMessage;
+        JOutputObject: JsonObject;
+        JOutputToken: JsonToken;
+        JResultToken: JsonToken;
+        JResultObject: JsonObject;
+        OutputMessage: Text;
+        ResultMessage: Text;
+        EInvoiceSetUp: Record "E-Invoice Set Up 1";
+        JResultArray: JsonArray;
+
+        DtldGSTLedgerEntry: Record "Detailed GST Ledger Entry";
+        TransShipment: Record 5744;
+        State: Record State;
+        Country: Record 9;
+        TrFromLocation: Record 14;
+        TransportMethod: Record 259;
+
+        CessVal: Decimal;
+        CGSTVal: Decimal;
+        IGSTVal: Decimal;
+        SGSTVal: Decimal;
+        CessNonAdVal: Decimal;
+        StCessVal: Decimal;
+        TotalInvVal: Decimal;
+        AssVal: Decimal;
+        PreviousLineNo: Integer;
+        Remarks: Text;
+        Status: Text;
+        ReturnMsg: Label 'Status : %1\ %2';
+        TrToLocation: Record 14;
+        EInvoiceOutput: Record 50014;
+        Transporter: Record 23;
+        TransAdd1: Text[250];
+        TransFAdd1: Text[250];
+    begin
+        EInvoiceSetUp.Get();
+        EInvoiceSetUp.TestField("Private Key");
+        EInvoiceSetUp.TestField("Private Value");
+        EInvoiceSetUp.TestField("Private IP");
+        EInvoiceSetUp.TestField("E-Way Bill URL");
+        CompInfo.GET;
+        CompInfo.TESTFIELD(CompInfo."E-Mail");
+
+        //ROBOAPICalls.CheckIfCancelled(DocNo);
+
+        TransShipment.GET(DocNo);
+        TrToLocation.GET(TransShipment."Transfer-to Code");
+        TrFromLocation.GET(TransShipment."Transfer-from Code");
+
+        CLEAR(CessVal);
+        CLEAR(CGSTVal);
+        CLEAR(IGSTVal);
+        CLEAR(SGSTVal);
+        CLEAR(CessNonAdVal);
+        CLEAR(StCessVal);
+        CLEAR(TotalInvVal);
+        CLEAR(AssVal);
+        CLEAR(PreviousLineNo);
+
+        GlbTextVar := '';
+        //Write Common Details
+        GlbTextVar += '{';
+        WriteToGlbTextVar('action', 'INVOICE', 0, TRUE);
+        GlbTextVar += '"data" : [';
+        GlbTextVar += '{';
+        // 15800 Open For Poduction  WriteToGlbTextVar('GENERATOR_GSTIN', TrFromLocation."GST Registration No.", 0, TRUE);
+        WriteToGlbTextVar('GENERATOR_GSTIN', '05AAACE1268K1ZR', 0, TRUE);
+        // Test For UAT
+        //WriteToGlbTextVar('SUPPLY_TYPE','Regular',0,TRUE);//Commented by LFS_NG
+        WriteToGlbTextVar('SUPPLY_TYPE', '', 0, TRUE);//Added by LFS_NG
+                                                      // WriteToGlbTextVar('TRANSACTION_SUB_TYPE','For Own Use',0,TRUE);//Commented by LFS_NG
+        WriteToGlbTextVar('TRANSACTION_SUB_TYPE', 'JOB WORK', 0, TRUE);//Added by LFS_NG
+                                                                       //WriteToGlbTextVar('TRANSACTION_SUB_TYPE','Others - Delivery Challan',0,TRUE);//Added by LFS_NG
+                                                                       //WriteToGlbTextVar('DOC_TYPE','CHL',0,TRUE);// Commented by LFS_NG
+        WriteToGlbTextVar('DOC_TYPE', 'Delivery Challan', 0, TRUE);//Added by LFS_NG
+        WriteToGlbTextVar('TRANSACTION_TYPE', 'Outward', 0, TRUE);
+        WriteToGlbTextVar('DOC_NO', FORMAT(TransShipment."No."), 0, TRUE);
+        WriteToGlbTextVar('DOC_DATE', FORMAT(TransShipment."Posting Date", 0, '<Day,2>-<Month Text,3>-<Year4>'), 0, TRUE);
+        // 15800 Open For Poduction WriteToGlbTextVar('CONSIGNOR_GSTIN_NO', TrFromLocation."GST Registration No.", 0, TRUE);
+        WriteToGlbTextVar('CONSIGNOR_GSTIN_NO', '05AAACE1268K1ZR', 0, TRUE);
+        // Test For UAT
+        WriteToGlbTextVar('CONSIGNOR_LEGAL_NAME', CompInfo.Name, 0, TRUE);
+        // Open For Production WriteToGlbTextVar('CONSIGNEE_GSTIN_NO', TrToLocation."GST Registration No.", 0, TRUE);
+        WriteToGlbTextVar('CONSIGNEE_GSTIN_NO', '05AAACE1268K1ZR', 0, TRUE);
+        // Test For UAT
+        WriteToGlbTextVar('CONSIGNEE_LEGAL_NAME', TransShipment."Transfer-from Name", 0, TRUE);
+        //WriteToGlbTextVar('SHIP_ADDRESS_LINE1',TransShipment."Transfer-to Address",0,TRUE);
+        TransAdd1 := TransShipment."Transfer-to Address" + ', ' + TransShipment."Transfer-to Address 2";
+        WriteToGlbTextVar('SHIP_ADDRESS_LINE1', TransAdd1, 0, TRUE);
+        State.GET(TrToLocation."State Code");
+        // 15800 Open For Poduction WriteToGlbTextVar('SHIP_STATE', State.Description, 0, TRUE);
+        WriteToGlbTextVar('SHIP_STATE', 'Haryana', 0, TRUE);// Test For UAT
+                                                            //WriteToGlbTextVar('SHIP_CITY_NAME',TransShipment."Transfer-to City",0,TRUE);
+        WriteToGlbTextVar('SHIP_CITY_NAME', TrToLocation.City, 0, TRUE);
+        //WriteToGlbTextVar('SHIP_PIN_CODE',TransShipment."Transfer-to Post Code",0,TRUE);
+        // 15800 Open For Poduction WriteToGlbTextVar('SHIP_PIN_CODE', TrToLocation."Post Code", 0, TRUE);
+        WriteToGlbTextVar('SHIP_PIN_CODE', '123401', 0, TRUE);
+        // Test For UAT
+        Country.GET(TransShipment."Trsf.-to Country/Region Code");
+        WriteToGlbTextVar('SHIP_COUNTRY', FORMAT(Country.Name), 0, TRUE);
+        //WriteToGlbTextVar('ORIGIN_ADDRESS_LINE1',TrFromLocation.Address,0,TRUE);
+        TransFAdd1 := TrFromLocation.Address + ', ' + TrFromLocation."Address 2";
+        WriteToGlbTextVar('ORIGIN_ADDRESS_LINE1', TransFAdd1, 0, TRUE);
+
+        State.GET(TrFromLocation."State Code");
+        // 15800 Open For Poduction WriteToGlbTextVar('ORIGIN_STATE', State.Description, 0, TRUE);
+        WriteToGlbTextVar('ORIGIN_STATE', 'Haryana', 0, TRUE);
+        // Test For UAT
+        WriteToGlbTextVar('ORIGIN_CITY_NAME', TrFromLocation.City, 0, TRUE);
+        // 15800 Open For Poduction   WriteToGlbTextVar('ORIGIN_PIN_CODE', TrFromLocation."Post Code", 0, TRUE);
+        WriteToGlbTextVar('ORIGIN_PIN_CODE', '123401', 0, TRUE);
+        // Test For UAT
+        IF TransportMethod.GET(TransShipment."Transport Method") THEN
+            WriteToGlbTextVar('TRANSPORT_MODE', FORMAT(TransportMethod."Transportation Mode"), 0, TRUE);
+        //LFS-NG
+        //WriteToGlbTextVar('TRANSPORT_MODE',FORMAT(TransShipment."Mode of Transport"),0,TRUE);//LFS-NG
+        IF TransShipment."Vehicle Type" = TransShipment."Vehicle Type"::Regular THEN
+            WriteToGlbTextVar('VEHICLE_TYPE', FORMAT('Normal'), 0, TRUE)
+        ELSE
+            IF TransShipment."Vehicle Type" = TransShipment."Vehicle Type"::ODC THEN
+                WriteToGlbTextVar('VEHICLE_TYPE', FORMAT('Over Dimensional Cargo'), 0, TRUE)
+            ELSE
+                IF TransShipment."Vehicle Type" = TransShipment."Vehicle Type"::" " THEN
+                    WriteToGlbTextVar('VEHICLE_TYPE', 'null', 1, TRUE);
+        //IF ShippingAgent.GET(TransShipment."Shipping Agent Code") THEN
+        //  WriteToGlbTextVar('TRANSPORTER_ID_GSTIN',ShippingAgent."GST Registration No.",0,TRUE);
+        IF Transporter.GET(TransShipment."Transporter Code") THEN
+            // Open For Production WriteToGlbTextVar('TRANSPORTER_ID_GSTIN', Transporter."GST Registration No.", 0, TRUE);
+            WriteToGlbTextVar('TRANSPORTER_ID_GSTIN', '05AAACE1378A1Z9', 0, TRUE);
+        // Test For UAT.
+        WriteToGlbTextVar('APPROXIMATE_DISTANCE', FORMAT(TransShipment."Distance (Km)"), 1, TRUE);
+        IF TransShipment."LR/RR No." <> '' THEN
+            WriteToGlbTextVar('TRANS_DOC_NO', TransShipment."LR/RR No.", 0, TRUE)
+        ELSE
+            WriteToGlbTextVar('TRANS_DOC_NO', 'null', 1, TRUE);
+        IF TransShipment."LR/RR Date" <> 0D THEN
+            WriteToGlbTextVar('TRANS_DOC_DATE', FORMAT(TransShipment."LR/RR Date", 0, '<Day,2>-<Month Text,3>-<Year4>'), 0, TRUE)
+        ELSE
+            WriteToGlbTextVar('TRANS_DOC_DATE', 'null', 1, TRUE);
+
+        IF TransShipment."Vehicle No." <> '' THEN
+            WriteToGlbTextVar('VEHICLE_NO', TransShipment."Vehicle No.", 0, TRUE)
+        ELSE
+            WriteToGlbTextVar('VEHICLE_NO', 'null', 1, TRUE);
+        TotalInvVal := GetTotDCValue(TransShipment."No.");
+
+
+        WriteToGlbTextVar('CGST_AMOUNT', 'null', 1, TRUE);
+        WriteToGlbTextVar('SGST_AMOUNT', 'null', 1, TRUE);
+        WriteToGlbTextVar('IGST_AMOUNT', 'null', 1, TRUE);
+        WriteToGlbTextVar('CESS_AMOUNT', 'null', 1, TRUE);
+        //   WriteToGlbTextVar('TOTAL_TAXABLE_VALUE','()null',1,TRUE);
+        WriteToGlbTextVar('TOTAL_TAXABLE_VALUE', FORMAT(0), 1, TRUE);
+        WriteToGlbTextVar('OTHER_VALUE', '0', 1, TRUE);
+        WriteToGlbTextVar('TOTAL_INVOICE_VALUE', FORMAT(ABS(TotalInvVal), 0, 2), 1, TRUE);
+
+        GlbTextVar += '"Items" : [';
+        WriteItemListEWBInter(DtldGSTLedgerEntry, DocNo);
+        GlbTextVar += ']';
+        GlbTextVar += '}';
+        GlbTextVar += ']';
+        GlbTextVar += '}';
+        /*  ROBOSetup.GET(TrFromLocation."GST Registration No.");
+         ROBOSetup.TESTFIELD("Eway Private Key");
+         ROBOSetup.TESTFIELD("Eway Private Value");
+         ROBOSetup.TESTFIELD(ROBOSetup.IPAddress);
+         ROBOSetup.TESTFIELD(ROBOSetup.user_name);
+         ROBOSetup.TESTFIELD(ROBOSetup.Gstin);
+         ROBOSetup.TESTFIELD(ROBOSetup.Password);
+         ROBOSetup.TESTFIELD("URL E-Way");
+         */
+        ROBOSetup.GET(TrFromLocation."GST Registration No.");
+        ROBOSetup.TestField("User Name");
+        ROBOSetup.TestField(Password);
+        MESSAGE(GlbTextVar);
+        /*//12887 commneted ASSERTERROR ERROR coming IN cu67 compilation
+            EWayAPI.InvoiceDetails(ROBOSetup."URL E-Way",
+                                  ROBOSetup."Eway Private Key",
+                                  ROBOSetup."Eway Private Value",
+                                  ROBOSetup.IPAddress,
+                                  GlbTextVar,
+                                  ROBOSetup."Error File Save Path",
+                                  EwayMessageID,
+                                  EwayMessage,
+                                  DataText,
+                                  Remarks,
+                                  Status);
+        //12887 commneted ASSERTERROR ERROR coming IN cu67 compilation*/
+        EinvoiceHttpContent.WriteFrom(Format(GlbTextVar));
+        EinvoiceHttpContent.GetHeaders(EinvoiceHttpHeader);
+        EinvoiceHttpHeader.Clear();
+        EinvoiceHttpHeader.Add('PRIVATEKEY', EInvoiceSetUp."Private Key");
+        EinvoiceHttpHeader.Add('PRIVATEVALUE', EInvoiceSetUp."Private Value");
+        EinvoiceHttpHeader.Add('Content-Type', 'application/json');
+        EinvoiceHttpHeader.Add('IP', EInvoiceSetUp."Private IP");
+        EinvoiceHttpRequest.Content := EinvoiceHttpContent;
+        EinvoiceHttpRequest.SetRequestUri(EInvoiceSetUp."E-Way Bill URL");
+        EinvoiceHttpRequest.Method := 'POST';
+        if EinvoiceHttpClient.Send(EinvoiceHttpRequest, EinvoiceHttpResponse) then begin
+            EinvoiceHttpResponse.Content.ReadAs(ResultMessage);
+            JResultObject.ReadFrom(ResultMessage);
+            Message(ResultMessage);
+            Char13 := 13;
+            Char10 := 10;
+            NewLine := FORMAT(Char10) + FORMAT(Char13);
+            ErrorLogMessage += 'Time :' + format(CurrentDateTime) + NewLine + '-----------------------------------------------------------' + NewLine
+      + ResultMessage + NewLine + '-----------------------------------------------------------';
+
+            if JResultObject.Get('MessageId', JResultToken) then
+                if JResultToken.AsValue().AsInteger() = 1 then begin
+                    if JResultObject.Get('Message', JResultToken) then;
+                    Message(Format(JResultToken));
+                end else
+                    if JResultObject.Get('Message', JResultToken) then
+                        Message(Format(JResultToken));
+
+            if JResultObject.Get('Data', JResultToken) then
+                if JResultToken.IsArray then begin
+                    JResultToken.WriteTo(OutputMessage);
+                    JResultArray.ReadFrom(OutputMessage);
+                    if JResultArray.Get(0, JOutputToken) then begin
+                        if JOutputToken.IsObject then begin
+                            JOutputToken.WriteTo(OutputMessage);
+                            JOutputObject.ReadFrom(OutputMessage);
+                        end;
+                    end;
+
+                    if JOutputObject.Get('REMARKS', JOutputToken) then
+                        Remarks := JOutputToken.AsValue().AsText();
+                    if JOutputObject.Get('STATUS', JOutputToken) then
+                        Status := JOutputToken.AsValue().AsText();
+                    Message(ReturnMsg, Remarks, Status);
+                end;
+        end else
+            Message('Generation Invoice Detail Failed!!');
+        EInvoiceOutput.RESET;
+        EInvoiceOutput.SETRANGE("Document No.", DocNo);
+        IF EInvoiceOutput.ISEMPTY THEN BEGIN
+            EInvoiceOutput."Document Type" := EInvoiceOutput."Document Type"::"Transfer Shipment";
+            EInvoiceOutput."Document No." := DocNo;
+            EInvoiceOutput.INSERT;
+        END;
+
+    end;
+
 
     local procedure WriteToGlbTextVar(Label: Text; Value: Text; ValFormat: Option Text,Number; InsertComma: Boolean)
     var

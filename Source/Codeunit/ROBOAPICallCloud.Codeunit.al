@@ -988,7 +988,7 @@ codeunit 50401 "ROBOAPI Call Cloud"
                 Location.GET(TransShipHdr."Transfer-to Code");
                 State.GET(Location."State Code");
                 WriteToGlbTextVar('LegalName', CompInfo.Name, 0, TRUE);
-                WriteToGlbTextVar('TrdName', Location.Name, 0, TRUE);
+                WriteToGlbTextVar('TrdName', Location."Name 3" + ' ,' + Location.Name, 0, TRUE);
                 WriteToGlbTextVar('PlaceOfSupply', State."State Code (GST Reg. No.)", 0, TRUE);
                 WriteToGlbTextVar('Address1', Location.Address, 0, TRUE);
                 WriteToGlbTextVar('Address2', Location."Address 2", 0, TRUE);
@@ -1369,8 +1369,6 @@ codeunit 50401 "ROBOAPI Call Cloud"
                     END;
 
                     WriteToGlbTextVar('HsnCode', DtldGSTLedgEntry2."HSN/SAC Code", 0, TRUE);
-                    ;
-
                     WriteToGlbTextVar('BarCode', 'null', 1, TRUE);
                     WriteToGlbTextVar('Quantity', FORMAT(ABS(DtldGSTLedgEntry2.Quantity), 0, 2), 1, TRUE);
                     WriteToGlbTextVar('FreeQuantity', '0', 1, TRUE);
@@ -2267,14 +2265,14 @@ codeunit 50401 "ROBOAPI Call Cloud"
                     AlternateAddress.SetRange("Employee No.", 'PIPL');
                     AlternateAddress.SetRange(Code, SalesInvoiceHeader.Alternative);
                     if AlternateAddress.FindFirst() then begin
-                        WriteToGlbTextVar('CompName', CompanyInfo.Name, 0, TRUE);
+                        WriteToGlbTextVar('CompName', AlternateAddress.Name, 0, TRUE);
                         State.GET(SalesInvoiceHeader."GST Bill-to State Code");
                         WriteToGlbTextVar('Address1', AlternateAddress.Address, 0, TRUE);
                         WriteToGlbTextVar('Address2', AlternateAddress."Address 2", 0, TRUE);
                         WriteToGlbTextVar('Location', AlternateAddress.City, 0, TRUE);
                         WriteToGlbTextVar('Pincode', AlternateAddress."Post Code", 1, TRUE);
-                        if StateIn.Get(AlternateAddress.EIN_State) then
-                            WriteToGlbTextVar('StateCode', StateIn."State Code for E-Invoicing", 0, false);
+                        if StateIn.Get(AlternateAddress.EIN_State) then;
+                        WriteToGlbTextVar('StateCode', StateIn."State Code for E-Invoicing", 0, false);
                     end;
                 END;
             DGLEntryInfo."Original Doc. Type"::"Transfer Shipment":
@@ -2284,13 +2282,13 @@ codeunit 50401 "ROBOAPI Call Cloud"
                     AlternateAddress.SetRange("Employee No.", 'PIPL');
                     AlternateAddress.SetRange(Code, TransferShipmentHeader.Alternative);
                     if AlternateAddress.FindFirst() then begin
-                        WriteToGlbTextVar('CompName', CompanyInfo.Name, 0, TRUE);
+                        WriteToGlbTextVar('CompName', AlternateAddress.Name, 0, TRUE);
                         WriteToGlbTextVar('Address1', AlternateAddress.Address, 0, TRUE);
                         WriteToGlbTextVar('Address2', AlternateAddress."Address 2", 0, TRUE);
                         WriteToGlbTextVar('Location', AlternateAddress.City, 0, TRUE);
                         WriteToGlbTextVar('Pincode', AlternateAddress."Post Code", 1, TRUE);
-                        if StateIn.Get(AlternateAddress.EIN_State) then
-                            WriteToGlbTextVar('StateCode', StateIn."State Code for E-Invoicing", 0, false);
+                        if StateIn.Get(AlternateAddress.EIN_State) then;
+                        WriteToGlbTextVar('StateCode', StateIn."State Code for E-Invoicing", 0, false);
                     end;
                 end;
 

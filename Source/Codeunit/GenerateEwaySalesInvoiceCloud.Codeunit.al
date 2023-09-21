@@ -41,9 +41,9 @@ codeunit 50400 "Generate EwaySalesInvoiceCloud"
         Transporter: Record 23;
         Customer: Record 18;
         ReturnMsg: Label 'Status : %1\ %2';
-        SalesAdd: Text[100];
+        SalesAdd: Text[250];
         DetailedGSTLedgerInfo: Record "Detailed GST Ledger Entry Info";
-        LocAdd: Text[100];
+        LocAdd: Text[250];
         EinvoiceHttpContent: HttpContent;
         EinvoiceHttpHeader: HttpHeaders;
         EinvoiceHttpRequest: HttpRequestMessage;
@@ -166,7 +166,7 @@ codeunit 50400 "Generate EwaySalesInvoiceCloud"
                 if AlternativeAdrees.FindFirst() then begin
                     Location.GET(SalesInvoiceHeader."Location Code");
                     LocAdd := Location.Address + ' ,' + Location."Address 2";
-                    WriteToGlbTextVar('ORIGIN_ADDRESS_LINE1', AlternativeAdrees.Address + ' ,' + AlternativeAdrees."Address 2", 0, TRUE);
+                    WriteToGlbTextVar('ORIGIN_ADDRESS_LINE1', AlternativeAdrees.Name + ' ,' + AlternativeAdrees.Address + ' ,' + AlternativeAdrees."Address 2", 0, TRUE);
                     State.GET(AlternativeAdrees.EIN_State);
                     WriteToGlbTextVar('ORIGIN_STATE', State.Description, 0, TRUE);
                     WriteToGlbTextVar('ORIGIN_CITY_NAME', AlternativeAdrees.City, 0, TRUE);
@@ -1519,7 +1519,7 @@ codeunit 50400 "Generate EwaySalesInvoiceCloud"
             REPEAT
                 FreightAmt += PstdStrLineDtls."Amount (LCY)";
             UNTIL PstdStrLineDtls.NEXT = 0;
-        EXIT(-FreightAmt);// Changes For Production FreightAmt Replaced By
+        EXIT(FreightAmt);// Changes For Production FreightAmt Replaced By
     end;
 
     procedure DownloadEWayBillInvoice(VAR SalesInvoiceHeader: Record "Sales Invoice Header")

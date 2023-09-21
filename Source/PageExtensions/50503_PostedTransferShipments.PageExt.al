@@ -114,6 +114,7 @@ pageextension 50503 PostedTransferShipments extends "Posted Transfer Shipments"
                 end;
             }
 
+
             action(ModifyTransferShipmentHeader)
             {
                 Caption = 'Modify Transfer Shipment Header';
@@ -149,6 +150,18 @@ pageextension 50503 PostedTransferShipments extends "Posted Transfer Shipments"
                     CLEAR(EwayBillAPI);
                     EwayBillAPI.GenerateInvoiceDetailsInter(Rec."No.", 2);
 
+                end;
+            }
+            action("JobWork InvoiceDetails")
+            {
+                ApplicationArea = All;
+                Promoted = true;
+                trigger OnAction()
+                var
+                    EwayBillAPI: Codeunit "GenerateEwayStockTranfr Cloud";
+                begin
+                    Clear(EwayBillAPI);
+                    EwayBillAPI.GenerateInvoiceDetailsJB(Rec."No.", 2);
                 end;
             }
             action("CalculateDistance")
