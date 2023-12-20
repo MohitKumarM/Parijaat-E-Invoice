@@ -240,7 +240,7 @@ codeunit 50401 "ROBOAPI Call Cloud"
                 EinvoiceHttpHeader.Add('client_secret', EInvoiceSetUp."Client Secret");
                 EinvoiceHttpHeader.Add('IPAddress', EInvoiceSetUp."IP Address");
                 EinvoiceHttpHeader.Add('Content-Type', 'application/json');
-                EinvoiceHttpHeader.Add('user_name', GSTRegistrationNos."User Name");
+                EinvoiceHttpHeader.Add('user_name', GSTRegistrationNos."E-Invoice User Name");
                 EinvoiceHttpHeader.Add('Gstin', Location."GST Registration No.");
                 EinvoiceHttpRequest.Content := EinvoiceHttpContent;
                 EinvoiceHttpRequest.SetRequestUri(EInvoiceSetUp."E-Invoice URl");
@@ -424,7 +424,7 @@ codeunit 50401 "ROBOAPI Call Cloud"
             EinvoiceHttpHeader.Add('client_secret', EInvoiceSetUp."Client Secret");
             EinvoiceHttpHeader.Add('IPAddress', EInvoiceSetUp."IP Address");
             EinvoiceHttpHeader.Add('Content-Type', 'application/json');
-            EinvoiceHttpHeader.Add('user_name', GSTRegistrationNos."User Name");
+            EinvoiceHttpHeader.Add('user_name', GSTRegistrationNos."E-Invoice User Name");
             EinvoiceHttpHeader.Add('Gstin', Location."GST Registration No.");
             EinvoiceHttpRequest.Content := EinvoiceHttpContent;
             EinvoiceHttpRequest.SetRequestUri(EInvoiceSetUp."E-Invoice URl");
@@ -682,7 +682,7 @@ codeunit 50401 "ROBOAPI Call Cloud"
             EinvoiceHttpHeader.Add('client_secret', EInvoiceSetUp."Client Secret");
             EinvoiceHttpHeader.Add('IPAddress', EInvoiceSetUp."IP Address");
             EinvoiceHttpHeader.Add('Content-Type', 'application/json');
-            EinvoiceHttpHeader.Add('user_name', GSTRegistrationNos."User Name");
+            EinvoiceHttpHeader.Add('user_name', GSTRegistrationNos."E-Invoice User Name");
             EinvoiceHttpHeader.Add('Gstin', Location."GST Registration No.");
             EinvoiceHttpRequest.Content := EinvoiceHttpContent;
             EinvoiceHttpRequest.SetRequestUri(EInvoiceSetUp."URL Get IRN");
@@ -859,7 +859,7 @@ codeunit 50401 "ROBOAPI Call Cloud"
     begin
         if GSTRegistrationNos.Get(GSTIN) then;
         JsonObj.Add('action', 'ACCESSTOKEN');
-        JsonObj.Add('UserName', GSTRegistrationNos."User Name");
+        JsonObj.Add('UserName', GSTRegistrationNos."E-Invoice User Name");
         JsonObj.Add('Password', GSTRegistrationNos.Password);
         JsonObj.Add('Gstin', GSTRegistrationNos.Code);
         JsonObj.WriteTo(JsonTxt);
@@ -1878,7 +1878,7 @@ codeunit 50401 "ROBOAPI Call Cloud"
         EinvoiceHttpHeader.Add('client_secret', EInvoiceSetUp."Client Secret");
         EinvoiceHttpHeader.Add('IPAddress', EInvoiceSetUp."IP Address");
         EinvoiceHttpHeader.Add('Content-Type', 'application/json');
-        EinvoiceHttpHeader.Add('user_name', ROBOSetup."User Name");
+        EinvoiceHttpHeader.Add('user_name', ROBOSetup."E-Invoice User Name");
         EinvoiceHttpHeader.Add('Gstin', Location."GST Registration No.");
         EinvoiceHttpRequest.Content := EinvoiceHttpContent;
         EinvoiceHttpRequest.SetRequestUri(EInvoiceSetUp."Dynamics QR URL");
@@ -2130,7 +2130,7 @@ codeunit 50401 "ROBOAPI Call Cloud"
         EinvoiceHttpHeader.Add('client_secret', EInvoiceSetUp."Client Secret");
         EinvoiceHttpHeader.Add('IPAddress', EInvoiceSetUp."IP Address");
         EinvoiceHttpHeader.Add('Content-Type', 'application/json');
-        EinvoiceHttpHeader.Add('user_name', GSTRegistrationNos."User Name");
+        EinvoiceHttpHeader.Add('user_name', GSTRegistrationNos."E-Invoice User Name");
         EinvoiceHttpHeader.Add('Gstin', Location."GST Registration No.");
         EinvoiceHttpRequest.Content := EinvoiceHttpContent;
         EinvoiceHttpRequest.SetRequestUri(EInvoiceSetUp."E-Invoice URl");

@@ -1,4 +1,4 @@
-pageextension 50503 PostedTransferShipments extends "Posted Transfer Shipments"
+pageextension 50520 PostedTransferShipments extends "Posted Transfer Shipments"
 {
     layout
     {

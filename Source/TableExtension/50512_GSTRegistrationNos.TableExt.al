@@ -2,7 +2,7 @@ tableextension 50512 GSTRegistrationNo extends "GST Registration Nos."
 {
     fields
     {
-        field(50101; "User Name"; Text[30])
+        field(50101; "E-Invoice User Name"; Text[30])
         {
             DataClassification = ToBeClassified;
         }

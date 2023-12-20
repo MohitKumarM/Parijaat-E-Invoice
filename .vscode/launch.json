@@ -9,15 +9,14 @@
             "environmentType": "Sandbox",
             "startupObjectId": 143,
             "startupObjectType": "Page",
-            "server": "https://businesscentral.dynamics.com/ab1e2f9e-0470-4b67-aaf4-e973b0b06cca/PARIJAT_UAT",
+            "server": "https://businesscentral.dynamics.com/ab1e2f9e-0470-4b67-aaf4-e973b0b06cca/",
             "environmentName": "PARIJAT_UAT",
-            //"server": "https://businesscentral.dynamics.com/ab1e2f9e-0470-4b67-aaf4-e973b0b06cca/BC_TEST",
-          // "environmentName": "BC_TEST",
+            //"environmentName": "BC_TEST",
             "breakOnError": "All",
             "launchBrowser": true,
             "enableLongRunningSqlStatements": true,
             "enableSqlInformationDebugger": true,
-            "schemaUpdateMode": "ForceSync"
+            //"schemaUpdateMode": "ForceSync"
             
         }
     ]

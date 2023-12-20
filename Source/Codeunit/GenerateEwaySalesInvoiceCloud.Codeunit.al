@@ -92,8 +92,8 @@ codeunit 50400 "Generate EwaySalesInvoiceCloud"
 
             GlbTextVar += '"data" : [';
             GlbTextVar += '{';
-            // 15800 Open For Production    WriteToGlbTextVar('GENERATOR_GSTIN', DtldGSTLedgerEntry."Location  Reg. No.", 0, TRUE);
-            WriteToGlbTextVar('GENERATOR_GSTIN', '05AAACE1268K1ZR', 0, TRUE); // Test For UAT
+            WriteToGlbTextVar('GENERATOR_GSTIN', DtldGSTLedgerEntry."Location  Reg. No.", 0, TRUE);
+
             WriteToGlbTextVar('TRANSACTION_TYPE', 'Outward', 0, TRUE);
             CASE SalesInvoiceHeader."Invoice Type" OF
                 SalesInvoiceHeader."Invoice Type"::" ",
@@ -114,19 +114,11 @@ codeunit 50400 "Generate EwaySalesInvoiceCloud"
 
             WriteToGlbTextVar('DOC_NO', FORMAT(SalesInvoiceHeader."No."), 0, TRUE);
             WriteToGlbTextVar('DOC_DATE', FORMAT(SalesInvoiceHeader."Document Date", 0, '<Day,2>-<Month Text,3>-<Year4>'), 0, TRUE);
-            // 15800 Open For Production WriteToGlbTextVar('CONSIGNOR_GSTIN_NO', DtldGSTLedgerEntry."Location  Reg. No.", 0, TRUE);
-            WriteToGlbTextVar('CONSIGNOR_GSTIN_NO', '05AAACE1268K1ZR', 0, TRUE); // Test For UAT
+            WriteToGlbTextVar('CONSIGNOR_GSTIN_NO', DtldGSTLedgerEntry."Location  Reg. No.", 0, TRUE);
+
             WriteToGlbTextVar('CONSIGNOR_LEGAL_NAME', CompInfo.Name, 0, TRUE);
-            // ********* 15800 ForUAT
-            SalesInvLine.Reset();
-            SalesInvLine.SetRange("Document No.", SalesInvoiceHeader."No.");
-            if SalesInvLine.FindFirst() then;
-            if SalesInvLine."GST Jurisdiction Type" = SalesInvLine."GST Jurisdiction Type"::Intrastate then
-                WriteToGlbTextVar('CONSIGNEE_GSTIN_NO', '05AAACE1378A1Z9', 0, TRUE) // Test For UAT
-            else
-                WriteToGlbTextVar('CONSIGNEE_GSTIN_NO', '05AAACE3061A1ZH', 0, TRUE); // Test For UAT
-                                                                                     // ********* 15800 ForUAT
-                                                                                     // 15800 Open For Production WriteToGlbTextVar('CONSIGNEE_GSTIN_NO', DtldGSTLedgerEntry."Buyer/Seller Reg. No.", 0, TRUE);
+
+            WriteToGlbTextVar('CONSIGNEE_GSTIN_NO', DtldGSTLedgerEntry."Buyer/Seller Reg. No.", 0, TRUE);
 
             WriteToGlbTextVar('CONSIGNEE_LEGAL_NAME', SalesInvoiceHeader."Ship-to Name", 0, TRUE);
             SalesAdd := SalesInvoiceHeader."Ship-to Address" + ' ,' + SalesInvoiceHeader."Ship-to Address 2";
@@ -134,27 +126,17 @@ codeunit 50400 "Generate EwaySalesInvoiceCloud"
 
             if DetailedGSTLedgerInfo.Get(DtldGSTLedgerEntry."Entry No.") then
                 IF State.GET(DetailedGSTLedgerInfo."Shipping Address State Code") THEN
-                    // 15800 Open For Production WriteToGlbTextVar('SHIP_STATE', State.Description, 0, TRUE) 
-                    if SalesInvLine."GST Jurisdiction Type" = SalesInvLine."GST Jurisdiction Type"::Intrastate then
-                        WriteToGlbTextVar('SHIP_STATE', 'Haryana', 0, TRUE) // // Test For UAT
-                    else
-                        WriteToGlbTextVar('SHIP_STATE', 'Delhi', 0, TRUE)// Test For UAT
+                    WriteToGlbTextVar('SHIP_STATE', State.Description, 0, TRUE)
+
                 ELSE BEGIN
                     State.GET(Customer."State Code");
-                    // 15800 Open For Production WriteToGlbTextVar('SHIP_STATE', State.Description, 0, TRUE)
-                    if SalesInvLine."GST Jurisdiction Type" = SalesInvLine."GST Jurisdiction Type"::Intrastate then
-                        WriteToGlbTextVar('SHIP_STATE', 'Haryana', 0, TRUE) // Test For UAT
-                    else
-                        WriteToGlbTextVar('SHIP_STATE', 'Delhi', 0, TRUE)// Test For UAT
+                    WriteToGlbTextVar('SHIP_STATE', State.Description, 0, TRUE)
 
                 END;
 
             WriteToGlbTextVar('SHIP_CITY_NAME', SalesInvoiceHeader."Ship-to City", 0, TRUE);
-            // 15800 Open For Production WriteToGlbTextVar('SHIP_PIN_CODE', SalesInvoiceHeader."Ship-to Post Code", 0, TRUE);
-            if SalesInvLine."GST Jurisdiction Type" = SalesInvLine."GST Jurisdiction Type"::Intrastate then
-                WriteToGlbTextVar('SHIP_PIN_CODE', '123401', 0, TRUE) // Test For UAT
-            else
-                WriteToGlbTextVar('SHIP_PIN_CODE', '110001', 0, TRUE); // Test For UAT
+            WriteToGlbTextVar('SHIP_PIN_CODE', SalesInvoiceHeader."Ship-to Post Code", 0, TRUE);
+
 
             Country.GET(SalesInvoiceHeader."Ship-to Country/Region Code");
             WriteToGlbTextVar('SHIP_COUNTRY', FORMAT(Country.Name), 0, TRUE);
@@ -187,8 +169,8 @@ codeunit 50400 "Generate EwaySalesInvoiceCloud"
             WriteToGlbTextVar('TRANSPORT_MODE', 'null', 1, TRUE);
             WriteToGlbTextVar('VEHICLE_TYPE', 'null', 1, TRUE);
             IF Transporter.GET(SalesInvoiceHeader."Transporter Code") THEN
-                // 15800 Open For Production   WriteToGlbTextVar('TRANSPORTER_ID_GSTIN', Transporter."GST Registration No.", 0, TRUE);
-                WriteToGlbTextVar('TRANSPORTER_ID_GSTIN', '05AAACE1378A1Z9', 0, TRUE); // Test For UAT.
+                WriteToGlbTextVar('TRANSPORTER_ID_GSTIN', Transporter."GST Registration No.", 0, TRUE);
+
             WriteToGlbTextVar('APPROXIMATE_DISTANCE', FORMAT(SalesInvoiceHeader."Distance (Km)"), 1, TRUE);
             WriteToGlbTextVar('TRANS_DOC_NO', SalesInvoiceHeader."LR/RR No.", 0, TRUE);
             WriteToGlbTextVar('TRANS_DOC_DATE', FORMAT(SalesInvoiceHeader."LR/RR Date", 0, '<Day,2>-<Month Text,3>-<Year4>'), 0, TRUE);
@@ -261,7 +243,7 @@ codeunit 50400 "Generate EwaySalesInvoiceCloud"
             GlbTextVar += '}';
 
             ROBOSetup.GET(DtldGSTLedgerEntry."Location  Reg. No.");
-            ROBOSetup.TestField("User Name");
+            ROBOSetup.TestField("E-Invoice User Name");
             ROBOSetup.TestField(Password);
             /*ROBOSetup.TESTFIELD("Eway Private Key");
             ROBOSetup.TESTFIELD("Eway Private Value");
@@ -577,7 +559,7 @@ codeunit 50400 "Generate EwaySalesInvoiceCloud"
             ShipPinCode := SalesInvoiceHeader."Ship-to Post Code";
 
             ROBOSetup.GET(DtldGSTLedgerEntry."Location  Reg. No.");
-            ROBOSetup.TestField("User Name");
+            ROBOSetup.TestField("E-Invoice User Name");
             ROBOSetup.TestField(Password);
             /*  ROBOSetup.GET(DtldGSTLedgerEntry."Location  Reg. No.");
              ROBOSetup.TESTFIELD("Eway Private Key");
@@ -699,8 +681,8 @@ codeunit 50400 "Generate EwaySalesInvoiceCloud"
             WriteToGlbTextVar('action', 'SYNCEWAYBILL', 0, TRUE);
             GlbTextVar += '"data": [';
             GlbTextVar += '{';
-            WriteToGlbTextVar('GENERATOR_GSTIN', '05AAACE1268K1ZR', 0, TRUE); // Test For UAT
-                                                                              // 15800 Open For Production WriteToGlbTextVar('GENERATOR_GSTIN', DtldGSTLedgerEntry."Location  Reg. No.", 0, TRUE);
+
+            WriteToGlbTextVar('GENERATOR_GSTIN', DtldGSTLedgerEntry."Location  Reg. No.", 0, TRUE);
             WriteToGlbTextVar('DOC_NO', DtldGSTLedgerEntry."Document No.", 0, TRUE);
 
             IF SalesInvoiceHeader."Invoice Type" IN [SalesInvoiceHeader."Invoice Type"::"Bill of Supply"] THEN
@@ -711,7 +693,7 @@ codeunit 50400 "Generate EwaySalesInvoiceCloud"
             GlbTextVar += ']';
             GlbTextVar += '}';
             ROBOSetup.GET(DtldGSTLedgerEntry."Location  Reg. No.");
-            ROBOSetup.TestField("User Name");
+            ROBOSetup.TestField("E-Invoice User Name");
             ROBOSetup.TestField(Password);
             /* ROBOSetup.GET(DtldGSTLedgerEntry."Location  Reg. No.");
             ROBOSetup.TESTFIELD("Eway Private Key");
@@ -850,8 +832,8 @@ codeunit 50400 "Generate EwaySalesInvoiceCloud"
                 WriteToGlbTextVar('action', 'UPDATEPARTB', 0, TRUE);
                 GlbTextVar += '"data": [';
                 GlbTextVar += '{';
-                WriteToGlbTextVar('GENERATOR_GSTIN', '05AAACE1268K1ZR', 0, TRUE); // Test For UAT
-                                                                                  // 15800 Open For Production   WriteToGlbTextVar('Generator_Gstin', DtldGSTLedgerEntry."Location  Reg. No.", 0, TRUE);
+
+                WriteToGlbTextVar('Generator_Gstin', DtldGSTLedgerEntry."Location  Reg. No.", 0, TRUE);
                 WriteToGlbTextVar('EwbNo', ROBOOutput."Eway Bill No", 0, TRUE);
 
                 TransportMethod.GET(SalesInvoiceHeader."Transport Method");
@@ -1007,8 +989,8 @@ codeunit 50400 "Generate EwaySalesInvoiceCloud"
             WriteToGlbTextVar('action', 'CANCEL', 0, TRUE);
             GlbTextVar += '"data": [';
             GlbTextVar += '{';
-            // 15800 Open For Production WriteToGlbTextVar('Generator_Gstin', DtldGSTLedgerEntry."Location  Reg. No.", 0, TRUE);
-            WriteToGlbTextVar('GENERATOR_GSTIN', '05AAACE1268K1ZR', 0, TRUE); // Test For UAT
+            WriteToGlbTextVar('Generator_Gstin', DtldGSTLedgerEntry."Location  Reg. No.", 0, TRUE);
+
             WriteToGlbTextVar('EwbNo', ROBOOutput."Eway Bill No", 0, TRUE);
             WriteToGlbTextVar('CancelReason', ReasonCode.Description, 0, TRUE);
             WriteToGlbTextVar('cancelRmrk', SalesInvoiceHeader."Eway Cancel Remark", 0, FALSE);
@@ -1016,7 +998,7 @@ codeunit 50400 "Generate EwaySalesInvoiceCloud"
             GlbTextVar += ']';
             GlbTextVar += '}';
             ROBOSetup.GET(DtldGSTLedgerEntry."Location  Reg. No.");
-            ROBOSetup.TestField("User Name");
+            ROBOSetup.TestField("E-Invoice User Name");
             ROBOSetup.TestField(Password);
             /*  ROBOSetup.GET(DtldGSTLedgerEntry."Location  Reg. No.");
              ROBOSetup.TESTFIELD("Eway Private Key");
@@ -1139,11 +1121,11 @@ codeunit 50400 "Generate EwaySalesInvoiceCloud"
                 WriteToGlbTextVar('action', 'UPDATETRANSPORTER', 0, TRUE);
                 GlbTextVar += '"data": [';
                 GlbTextVar += '{';
-                // 15800 Open For Production WriteToGlbTextVar('Generator_Gstin', DtldGSTLedgerEntry."Location  Reg. No.", 0, TRUE);
-                WriteToGlbTextVar('GENERATOR_GSTIN', '05AAACE1268K1ZR', 0, TRUE); // Test For UAT
+                WriteToGlbTextVar('Generator_Gstin', DtldGSTLedgerEntry."Location  Reg. No.", 0, TRUE);
+
                 WriteToGlbTextVar('EwbNo', ROBOOutput."Eway Bill No", 0, TRUE);
-                // 15800 Open For Production  WriteToGlbTextVar('Transport_Gstin', Transporter."GST Registration No.", 0, FALSE);
-                WriteToGlbTextVar('Transport_Gstin', '05AAACE1378A1Z9', 0, FALSE);// Test For UAT
+                WriteToGlbTextVar('Transport_Gstin', Transporter."GST Registration No.", 0, FALSE);
+
                 GlbTextVar += '{';
                 GlbTextVar += ']';
                 GlbTextVar += '}';
@@ -1417,7 +1399,7 @@ codeunit 50400 "Generate EwaySalesInvoiceCloud"
             DtldGSTLedgerEntry.SETRANGE(DtldGSTLedgerEntry."Document No.", DocNo);
             IF DtldGSTLedgerEntry.FINDFIRST THEN BEGIN
                 ROBOSetup.GET(DtldGSTLedgerEntry."Location  Reg. No.");
-                ROBOSetup.TestField("User Name");
+                ROBOSetup.TestField("E-Invoice User Name");
                 ROBOSetup.TestField(Password);
                 /* ROBOSetup.GET(DtldGSTLedgerEntry."Location  Reg. No.");
                 ROBOSetup.TESTFIELD("Eway Private Key");
@@ -1429,8 +1411,8 @@ codeunit 50400 "Generate EwaySalesInvoiceCloud"
                 ROBOSetup.TESTFIELD(ROBOSetup."URL E-Way");
                 ROBOSetup.TESTFIELD(ROBOSetup."Eway PDF Path");
  */ // 15800
-    // 15800 Open For Production  URLtext := EInvoiceSetup."E-Way Bill URL" + '?GSTIN=' + DtldGSTLedgerEntry."Location  Reg. No." + '&EWBNO=' + ROBOOutput."Eway Bill No" + '&action=GETEWAYBILL';
-                URLtext := EInvoiceSetup."E-Way Bill URL" + '?GSTIN=' + '05AAACE1268K1ZR' + '&EWBNO=' + ROBOOutput."Eway Bill No" + '&action=GETEWAYBILL';
+                URLtext := EInvoiceSetup."E-Way Bill URL" + '?GSTIN=' + DtldGSTLedgerEntry."Location  Reg. No." + '&EWBNO=' + ROBOOutput."Eway Bill No" + '&action=GETEWAYBILL';
+                //  URLtext := EInvoiceSetup."E-Way Bill URL" + '?GSTIN=' + '05AAACE1268K1ZR' + '&EWBNO=' + ROBOOutput."Eway Bill No" + '&action=GETEWAYBILL';
                 /*//12887 commneted ASSERTERROR ERROR coming IN cu67 compilation
                    EwayPDFMessageID := EWayAPI.DownloadEwayBillPdf(URLtext,
                                                 ROBOSetup."Eway Private Key",

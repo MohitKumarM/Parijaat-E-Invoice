@@ -89,32 +89,32 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
 
             GlbTextVar += '"data" : [';
             GlbTextVar += '{';
-            // 15800 Open For Production WriteToGlbTextVar('GENERATOR_GSTIN', DtldGSTLedgerEntry."Location  Reg. No.", 0, TRUE);
-            WriteToGlbTextVar('GENERATOR_GSTIN', '05AAACE1268K1ZR', 0, TRUE); // Test For UAT
+            WriteToGlbTextVar('GENERATOR_GSTIN', DtldGSTLedgerEntry."Location  Reg. No.", 0, TRUE);
+
             WriteToGlbTextVar('TRANSACTION_TYPE', 'Outward', 0, TRUE);
             WriteToGlbTextVar('TRANSACTION_SUB_TYPE', 'Supply', 0, TRUE);
             WriteToGlbTextVar('SUPPLY_TYPE', '', 0, TRUE); // 15800
             WriteToGlbTextVar('DOC_TYPE', 'Tax Invoice', 0, TRUE);
             WriteToGlbTextVar('DOC_NO', FORMAT(TransShipment."No."), 0, TRUE);
             WriteToGlbTextVar('DOC_DATE', FORMAT(TransShipment."Posting Date", 0, '<Day,2>-<Month Text,3>-<Year4>'), 0, TRUE);
-            WriteToGlbTextVar('CONSIGNOR_GSTIN_NO', '05AAACE1268K1ZR', 0, TRUE); // Test For UAT
-                                                                                 // 15800 Open For Production WriteToGlbTextVar('CONSIGNOR_GSTIN_NO', DtldGSTLedgerEntry."Location  Reg. No.", 0, TRUE);
+
+            WriteToGlbTextVar('CONSIGNOR_GSTIN_NO', DtldGSTLedgerEntry."Location  Reg. No.", 0, TRUE);
             WriteToGlbTextVar('CONSIGNOR_LEGAL_NAME', CompInfo.Name, 0, TRUE);
-            // 15800 Open For Production WriteToGlbTextVar('CONSIGNEE_GSTIN_NO', DtldGSTLedgerEntry."Buyer/Seller Reg. No.", 0, TRUE);
-            WriteToGlbTextVar('CONSIGNEE_GSTIN_NO', '05AAACE3061A1ZH', 0, TRUE); // Test For UAT
+            WriteToGlbTextVar('CONSIGNEE_GSTIN_NO', DtldGSTLedgerEntry."Buyer/Seller Reg. No.", 0, TRUE);
+
             WriteToGlbTextVar('CONSIGNEE_LEGAL_NAME', TransShipment."Transfer-from Name", 0, TRUE);
             //WriteToGlbTextVar('SHIP_ADDRESS_LINE1',TransShipment."Transfer-to Address",0,TRUE);
             TransAdd := TransShipment."Transfer-to Address" + ', ' + TransShipment."Transfer-to Address 2";
             WriteToGlbTextVar('SHIP_ADDRESS_LINE1', TransAdd, 0, TRUE);
             State.GET(TrToLocation."State Code");
-            // 15800 Open For Production  WriteToGlbTextVar('SHIP_STATE', State.Description, 0, TRUE);
-            WriteToGlbTextVar('SHIP_STATE', 'Delhi', 0, TRUE);// Test For UAT
+            WriteToGlbTextVar('SHIP_STATE', State.Description, 0, TRUE);
+
 
             //  WriteToGlbTextVar('SHIP_CITY_NAME',TransShipment."Transfer-to City",0,TRUE);
             //WriteToGlbTextVar('SHIP_CITY_NAME',TrFromLocation.City,0,TRUE);
             WriteToGlbTextVar('SHIP_CITY_NAME', TransShipment."Transfer-to City", 0, TRUE);
-            // 15800 Open For Production WriteToGlbTextVar('SHIP_PIN_CODE', TransShipment."Transfer-to Post Code", 0, TRUE);
-            WriteToGlbTextVar('SHIP_PIN_CODE', '110001', 0, TRUE); // Test For UAT
+            WriteToGlbTextVar('SHIP_PIN_CODE', TransShipment."Transfer-to Post Code", 0, TRUE);
+
 
             Country.GET(TransShipment."Trsf.-to Country/Region Code");
             WriteToGlbTextVar('SHIP_COUNTRY', FORMAT(Country.Name), 0, TRUE);
@@ -149,8 +149,8 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
             //      WriteToGlbTextVar('VEHICLE_TYPE',FORMAT('Over Dimensional Cargo'),0,TRUE);
 
             IF Transporter.GET(TransShipment."Transporter Code") THEN
-                // Open For Production  WriteToGlbTextVar('TRANSPORTER_ID_GSTIN', Transporter."GST Registration No.", 0, TRUE);
-                WriteToGlbTextVar('TRANSPORTER_ID_GSTIN', '05AAACE1378A1Z9', 0, TRUE); // Test For UAT.
+                WriteToGlbTextVar('TRANSPORTER_ID_GSTIN', Transporter."GST Registration No.", 0, TRUE);
+
             WriteToGlbTextVar('APPROXIMATE_DISTANCE', FORMAT(TransShipment."Distance (Km)"), 1, TRUE);
             WriteToGlbTextVar('TRANS_DOC_NO', TransShipment."LR/RR No.", 0, TRUE);
             WriteToGlbTextVar('TRANS_DOC_DATE', FORMAT(TransShipment."LR/RR Date", 0, '<Day,2>-<Month Text,3>-<Year4>'), 0, TRUE);
@@ -226,7 +226,7 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
             ROBOSetup.TESTFIELD("URL E-Way");
              */
             ROBOSetup.GET(DtldGSTLedgerEntry."Location  Reg. No.");
-            ROBOSetup.TestField("User Name");
+            ROBOSetup.TestField("E-Invoice User Name");
             ROBOSetup.TestField(Password);
             Message('%1', GlbTextVar);
 
@@ -366,9 +366,8 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
         WriteToGlbTextVar('action', 'INVOICE', 0, TRUE);
         GlbTextVar += '"data" : [';
         GlbTextVar += '{';
-        // 15800 Open For Poduction  WriteToGlbTextVar('GENERATOR_GSTIN', TrFromLocation."GST Registration No.", 0, TRUE);
-        WriteToGlbTextVar('GENERATOR_GSTIN', '05AAACE1268K1ZR', 0, TRUE);
-        // Test For UAT
+        WriteToGlbTextVar('GENERATOR_GSTIN', TrFromLocation."GST Registration No.", 0, TRUE);
+
         //WriteToGlbTextVar('SUPPLY_TYPE','Regular',0,TRUE);//Commented by LFS_NG
         WriteToGlbTextVar('SUPPLY_TYPE', '', 0, TRUE);//Added by LFS_NG
                                                       // WriteToGlbTextVar('TRANSACTION_SUB_TYPE','For Own Use',0,TRUE);//Commented by LFS_NG
@@ -379,26 +378,23 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
         WriteToGlbTextVar('TRANSACTION_TYPE', 'Outward', 0, TRUE);
         WriteToGlbTextVar('DOC_NO', FORMAT(TransShipment."No."), 0, TRUE);
         WriteToGlbTextVar('DOC_DATE', FORMAT(TransShipment."Posting Date", 0, '<Day,2>-<Month Text,3>-<Year4>'), 0, TRUE);
-        // 15800 Open For Poduction WriteToGlbTextVar('CONSIGNOR_GSTIN_NO', TrFromLocation."GST Registration No.", 0, TRUE);
-        WriteToGlbTextVar('CONSIGNOR_GSTIN_NO', '05AAACE1268K1ZR', 0, TRUE);
-        // Test For UAT
+        WriteToGlbTextVar('CONSIGNOR_GSTIN_NO', TrFromLocation."GST Registration No.", 0, TRUE);
+
         WriteToGlbTextVar('CONSIGNOR_LEGAL_NAME', CompInfo.Name, 0, TRUE);
-        // Open For Production WriteToGlbTextVar('CONSIGNEE_GSTIN_NO', TrToLocation."GST Registration No.", 0, TRUE);
-        WriteToGlbTextVar('CONSIGNEE_GSTIN_NO', '05AAACE1268K1ZR', 0, TRUE);
-        // Test For UAT
+        WriteToGlbTextVar('CONSIGNEE_GSTIN_NO', TrToLocation."GST Registration No.", 0, TRUE);
+
         WriteToGlbTextVar('CONSIGNEE_LEGAL_NAME', TransShipment."Transfer-from Name", 0, TRUE);
         //WriteToGlbTextVar('SHIP_ADDRESS_LINE1',TransShipment."Transfer-to Address",0,TRUE);
         TransAdd1 := TransShipment."Transfer-to Address" + ', ' + TransShipment."Transfer-to Address 2";
         WriteToGlbTextVar('SHIP_ADDRESS_LINE1', TransAdd1, 0, TRUE);
         State.GET(TrToLocation."State Code");
-        // 15800 Open For Poduction WriteToGlbTextVar('SHIP_STATE', State.Description, 0, TRUE);
-        WriteToGlbTextVar('SHIP_STATE', 'Haryana', 0, TRUE);// Test For UAT
-                                                            //WriteToGlbTextVar('SHIP_CITY_NAME',TransShipment."Transfer-to City",0,TRUE);
+        WriteToGlbTextVar('SHIP_STATE', State.Description, 0, TRUE);
+
+        //WriteToGlbTextVar('SHIP_CITY_NAME',TransShipment."Transfer-to City",0,TRUE);
         WriteToGlbTextVar('SHIP_CITY_NAME', TrToLocation.City, 0, TRUE);
         //WriteToGlbTextVar('SHIP_PIN_CODE',TransShipment."Transfer-to Post Code",0,TRUE);
-        // 15800 Open For Poduction WriteToGlbTextVar('SHIP_PIN_CODE', TrToLocation."Post Code", 0, TRUE);
-        WriteToGlbTextVar('SHIP_PIN_CODE', '123401', 0, TRUE);
-        // Test For UAT
+        WriteToGlbTextVar('SHIP_PIN_CODE', TrToLocation."Post Code", 0, TRUE);
+
         Country.GET(TransShipment."Trsf.-to Country/Region Code");
         WriteToGlbTextVar('SHIP_COUNTRY', FORMAT(Country.Name), 0, TRUE);
         //WriteToGlbTextVar('ORIGIN_ADDRESS_LINE1',TrFromLocation.Address,0,TRUE);
@@ -406,13 +402,11 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
         WriteToGlbTextVar('ORIGIN_ADDRESS_LINE1', TransFAdd1, 0, TRUE);
 
         State.GET(TrFromLocation."State Code");
-        // 15800 Open For Poduction WriteToGlbTextVar('ORIGIN_STATE', State.Description, 0, TRUE);
-        WriteToGlbTextVar('ORIGIN_STATE', 'Haryana', 0, TRUE);
-        // Test For UAT
+        WriteToGlbTextVar('ORIGIN_STATE', State.Description, 0, TRUE);
+
         WriteToGlbTextVar('ORIGIN_CITY_NAME', TrFromLocation.City, 0, TRUE);
-        // 15800 Open For Poduction   WriteToGlbTextVar('ORIGIN_PIN_CODE', TrFromLocation."Post Code", 0, TRUE);
-        WriteToGlbTextVar('ORIGIN_PIN_CODE', '123401', 0, TRUE);
-        // Test For UAT
+        WriteToGlbTextVar('ORIGIN_PIN_CODE', TrFromLocation."Post Code", 0, TRUE);
+
         IF TransportMethod.GET(TransShipment."Transport Method") THEN
             WriteToGlbTextVar('TRANSPORT_MODE', FORMAT(TransportMethod."Transportation Mode"), 0, TRUE);
         //LFS-NG
@@ -428,9 +422,8 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
         //IF ShippingAgent.GET(TransShipment."Shipping Agent Code") THEN
         //  WriteToGlbTextVar('TRANSPORTER_ID_GSTIN',ShippingAgent."GST Registration No.",0,TRUE);
         IF Transporter.GET(TransShipment."Transporter Code") THEN
-            // Open For Production WriteToGlbTextVar('TRANSPORTER_ID_GSTIN', Transporter."GST Registration No.", 0, TRUE);
-            WriteToGlbTextVar('TRANSPORTER_ID_GSTIN', '05AAACE1378A1Z9', 0, TRUE);
-        // Test For UAT.
+            WriteToGlbTextVar('TRANSPORTER_ID_GSTIN', Transporter."GST Registration No.", 0, TRUE);
+
         WriteToGlbTextVar('APPROXIMATE_DISTANCE', FORMAT(TransShipment."Distance (Km)"), 1, TRUE);
         IF TransShipment."LR/RR No." <> '' THEN
             WriteToGlbTextVar('TRANS_DOC_NO', TransShipment."LR/RR No.", 0, TRUE)
@@ -473,7 +466,7 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
          ROBOSetup.TESTFIELD("URL E-Way");
          */
         ROBOSetup.GET(TrFromLocation."GST Registration No.");
-        ROBOSetup.TestField("User Name");
+        ROBOSetup.TestField("E-Invoice User Name");
         ROBOSetup.TestField(Password);
         MESSAGE(GlbTextVar);
         /*//12887 commneted ASSERTERROR ERROR coming IN cu67 compilation
@@ -617,9 +610,8 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
         WriteToGlbTextVar('action', 'INVOICE', 0, TRUE);
         GlbTextVar += '"data" : [';
         GlbTextVar += '{';
-        // 15800 Open For Poduction  WriteToGlbTextVar('GENERATOR_GSTIN', TrFromLocation."GST Registration No.", 0, TRUE);
-        WriteToGlbTextVar('GENERATOR_GSTIN', '05AAACE1268K1ZR', 0, TRUE);
-        // Test For UAT
+        WriteToGlbTextVar('GENERATOR_GSTIN', TrFromLocation."GST Registration No.", 0, TRUE);
+
         //WriteToGlbTextVar('SUPPLY_TYPE','Regular',0,TRUE);//Commented by LFS_NG
         WriteToGlbTextVar('SUPPLY_TYPE', '', 0, TRUE);//Added by LFS_NG
                                                       // WriteToGlbTextVar('TRANSACTION_SUB_TYPE','For Own Use',0,TRUE);//Commented by LFS_NG
@@ -630,26 +622,23 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
         WriteToGlbTextVar('TRANSACTION_TYPE', 'Outward', 0, TRUE);
         WriteToGlbTextVar('DOC_NO', FORMAT(TransShipment."No."), 0, TRUE);
         WriteToGlbTextVar('DOC_DATE', FORMAT(TransShipment."Posting Date", 0, '<Day,2>-<Month Text,3>-<Year4>'), 0, TRUE);
-        // 15800 Open For Poduction WriteToGlbTextVar('CONSIGNOR_GSTIN_NO', TrFromLocation."GST Registration No.", 0, TRUE);
-        WriteToGlbTextVar('CONSIGNOR_GSTIN_NO', '05AAACE1268K1ZR', 0, TRUE);
-        // Test For UAT
+        WriteToGlbTextVar('CONSIGNOR_GSTIN_NO', TrFromLocation."GST Registration No.", 0, TRUE);
+
         WriteToGlbTextVar('CONSIGNOR_LEGAL_NAME', CompInfo.Name, 0, TRUE);
-        // Open For Production WriteToGlbTextVar('CONSIGNEE_GSTIN_NO', TrToLocation."GST Registration No.", 0, TRUE);
-        WriteToGlbTextVar('CONSIGNEE_GSTIN_NO', '05AAACE1268K1ZR', 0, TRUE);
-        // Test For UAT
+        WriteToGlbTextVar('CONSIGNEE_GSTIN_NO', TrToLocation."GST Registration No.", 0, TRUE);
+
         WriteToGlbTextVar('CONSIGNEE_LEGAL_NAME', TransShipment."Transfer-from Name", 0, TRUE);
         //WriteToGlbTextVar('SHIP_ADDRESS_LINE1',TransShipment."Transfer-to Address",0,TRUE);
         TransAdd1 := TransShipment."Transfer-to Address" + ', ' + TransShipment."Transfer-to Address 2";
         WriteToGlbTextVar('SHIP_ADDRESS_LINE1', TransAdd1, 0, TRUE);
         State.GET(TrToLocation."State Code");
-        // 15800 Open For Poduction WriteToGlbTextVar('SHIP_STATE', State.Description, 0, TRUE);
-        WriteToGlbTextVar('SHIP_STATE', 'Haryana', 0, TRUE);// Test For UAT
-                                                            //WriteToGlbTextVar('SHIP_CITY_NAME',TransShipment."Transfer-to City",0,TRUE);
+        WriteToGlbTextVar('SHIP_STATE', State.Description, 0, TRUE);
+
+        //WriteToGlbTextVar('SHIP_CITY_NAME',TransShipment."Transfer-to City",0,TRUE);
         WriteToGlbTextVar('SHIP_CITY_NAME', TrToLocation.City, 0, TRUE);
         //WriteToGlbTextVar('SHIP_PIN_CODE',TransShipment."Transfer-to Post Code",0,TRUE);
-        // 15800 Open For Poduction WriteToGlbTextVar('SHIP_PIN_CODE', TrToLocation."Post Code", 0, TRUE);
-        WriteToGlbTextVar('SHIP_PIN_CODE', '123401', 0, TRUE);
-        // Test For UAT
+        WriteToGlbTextVar('SHIP_PIN_CODE', TrToLocation."Post Code", 0, TRUE);
+
         Country.GET(TransShipment."Trsf.-to Country/Region Code");
         WriteToGlbTextVar('SHIP_COUNTRY', FORMAT(Country.Name), 0, TRUE);
         //WriteToGlbTextVar('ORIGIN_ADDRESS_LINE1',TrFromLocation.Address,0,TRUE);
@@ -657,13 +646,11 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
         WriteToGlbTextVar('ORIGIN_ADDRESS_LINE1', TransFAdd1, 0, TRUE);
 
         State.GET(TrFromLocation."State Code");
-        // 15800 Open For Poduction WriteToGlbTextVar('ORIGIN_STATE', State.Description, 0, TRUE);
-        WriteToGlbTextVar('ORIGIN_STATE', 'Haryana', 0, TRUE);
-        // Test For UAT
+        WriteToGlbTextVar('ORIGIN_STATE', State.Description, 0, TRUE);
+
         WriteToGlbTextVar('ORIGIN_CITY_NAME', TrFromLocation.City, 0, TRUE);
-        // 15800 Open For Poduction   WriteToGlbTextVar('ORIGIN_PIN_CODE', TrFromLocation."Post Code", 0, TRUE);
-        WriteToGlbTextVar('ORIGIN_PIN_CODE', '123401', 0, TRUE);
-        // Test For UAT
+        WriteToGlbTextVar('ORIGIN_PIN_CODE', TrFromLocation."Post Code", 0, TRUE);
+
         IF TransportMethod.GET(TransShipment."Transport Method") THEN
             WriteToGlbTextVar('TRANSPORT_MODE', FORMAT(TransportMethod."Transportation Mode"), 0, TRUE);
         //LFS-NG
@@ -679,9 +666,8 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
         //IF ShippingAgent.GET(TransShipment."Shipping Agent Code") THEN
         //  WriteToGlbTextVar('TRANSPORTER_ID_GSTIN',ShippingAgent."GST Registration No.",0,TRUE);
         IF Transporter.GET(TransShipment."Transporter Code") THEN
-            // Open For Production WriteToGlbTextVar('TRANSPORTER_ID_GSTIN', Transporter."GST Registration No.", 0, TRUE);
-            WriteToGlbTextVar('TRANSPORTER_ID_GSTIN', '05AAACE1378A1Z9', 0, TRUE);
-        // Test For UAT.
+            WriteToGlbTextVar('TRANSPORTER_ID_GSTIN', Transporter."GST Registration No.", 0, TRUE);
+
         WriteToGlbTextVar('APPROXIMATE_DISTANCE', FORMAT(TransShipment."Distance (Km)"), 1, TRUE);
         IF TransShipment."LR/RR No." <> '' THEN
             WriteToGlbTextVar('TRANS_DOC_NO', TransShipment."LR/RR No.", 0, TRUE)
@@ -724,7 +710,7 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
          ROBOSetup.TESTFIELD("URL E-Way");
          */
         ROBOSetup.GET(TrFromLocation."GST Registration No.");
-        ROBOSetup.TestField("User Name");
+        ROBOSetup.TestField("E-Invoice User Name");
         ROBOSetup.TestField(Password);
         MESSAGE(GlbTextVar);
         /*//12887 commneted ASSERTERROR ERROR coming IN cu67 compilation
@@ -1142,7 +1128,7 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
          ROBOSetup.TESTFIELD(ROBOSetup.Gstin);
          ROBOSetup.TESTFIELD(ROBOSetup.Password); */ // 15800
         ROBOSetup.Get(Location."GST Registration No.");
-        ROBOSetup.TestField("User Name");
+        ROBOSetup.TestField("E-Invoice User Name");
         ROBOSetup.TestField(Password);
         MESSAGE(GlbTextVar);
 
@@ -1257,8 +1243,8 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
             WriteToGlbTextVar('action', 'SYNCEWAYBILL', 0, TRUE);
             GlbTextVar += '"data": [';
             GlbTextVar += '{';
-            // Open For Production  WriteToGlbTextVar('GENERATOR_GSTIN', DtldGSTLedgerEntry."Location  Reg. No.", 0, TRUE);
-            WriteToGlbTextVar('GENERATOR_GSTIN', '05AAACE1268K1ZR', 0, TRUE); // Test For UAT
+            WriteToGlbTextVar('GENERATOR_GSTIN', DtldGSTLedgerEntry."Location  Reg. No.", 0, TRUE);
+
             WriteToGlbTextVar('DOC_NO', DtldGSTLedgerEntry."Document No.", 0, TRUE);
             WriteToGlbTextVar('DOC_TYPE', 'Tax Invoice', 0, FALSE);
             GlbTextVar += '}';
@@ -1274,7 +1260,7 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
                         ROBOSetup.TESTFIELD(ROBOSetup.Gstin);
                         ROBOSetup.TESTFIELD(ROBOSetup.Password); */ // 15800
             ROBOSetup.GET(DtldGSTLedgerEntry."Location  Reg. No.");
-            ROBOSetup.TestField("User Name");
+            ROBOSetup.TestField("E-Invoice User Name");
             ROBOSetup.TestField(Password);
             MESSAGE(GlbTextVar);
 
@@ -1388,8 +1374,8 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
         WriteToGlbTextVar('action', 'SYNCEWAYBILL', 0, TRUE);
         GlbTextVar += '"data": [';
         GlbTextVar += '{';
-        // Open For Production WriteToGlbTextVar('GENERATOR_GSTIN', TrFromLocation."GST Registration No.", 0, TRUE);
-        WriteToGlbTextVar('GENERATOR_GSTIN', '05AAACE1268K1ZR', 0, TRUE); // Test For UAT
+        WriteToGlbTextVar('GENERATOR_GSTIN', TrFromLocation."GST Registration No.", 0, TRUE);
+
         WriteToGlbTextVar('DOC_NO', TransShipment."No.", 0, TRUE);
         //    WriteToGlbTextVar('DOC_TYPE','Tax Invoice',0,FALSE);
         WriteToGlbTextVar('DOC_TYPE', 'Delivery Challan', 0, FALSE); //added LF_NGno
@@ -1406,7 +1392,7 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
         ROBOSetup.TESTFIELD(ROBOSetup.Gstin);
         ROBOSetup.TESTFIELD(ROBOSetup.Password); */ // 15800
         ROBOSetup.GET(TrFromLocation."GST Registration No.");
-        ROBOSetup.TestField("User Name");
+        ROBOSetup.TestField("E-Invoice User Name");
         ROBOSetup.TestField(Password);
         MESSAGE(GlbTextVar);
 
@@ -1691,7 +1677,7 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
                 ROBOSetup.TESTFIELD(ROBOSetup.Gstin);
                 ROBOSetup.TESTFIELD(ROBOSetup.Password); */ // 15800 
         ROBOSetup.GET(TrFrLocation."GST Registration No.");
-        ROBOSetup.TestField("User Name");
+        ROBOSetup.TestField("E-Invoice User Name");
         ROBOSetup.TestField(Password);
 
         /*//12887 commneted ASSERTERROR ERROR coming IN cu67 compilation
@@ -1944,7 +1930,7 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
             TrShipment.GET(DocNo);
             TrFrLocation.GET(TrShipment."Transfer-from Code");
             ROBOSetup.GET(TrFrLocation."GST Registration No.");
-            ROBOSetup.TestField("User Name");
+            ROBOSetup.TestField("E-Invoice User Name");
             ROBOSetup.TestField(Password);
             /* ROBOSetup.GET(TrFrLocation."GST Registration No.");
             ROBOSetup.TESTFIELD("Eway Private Key");
@@ -1955,8 +1941,8 @@ codeunit 50500 "GenerateEwayStockTranfr Cloud"
             ROBOSetup.TESTFIELD(ROBOSetup."URL E-Way");
             ROBOSetup.TESTFIELD(ROBOSetup."Eway PDF Path");
  */ // 15800
-    // 15800 Open For Production URLtext := EInvoiceSetup."E-Way Bill URL" + '?GSTIN=' + TrFrLocation."GST Registration No." + '&EWBNO=' + ROBOOutput."Eway Bill No" + '&action=GETEWAYBILL';
-            URLtext := EInvoiceSetup."E-Way Bill URL" + '?GSTIN=' + '05AAACE1268K1ZR' + '&EWBNO=' + ROBOOutput."Eway Bill No" + '&action=GETEWAYBILL';
+            URLtext := EInvoiceSetup."E-Way Bill URL" + '?GSTIN=' + TrFrLocation."GST Registration No." + '&EWBNO=' + ROBOOutput."Eway Bill No" + '&action=GETEWAYBILL';
+            // URLtext := EInvoiceSetup."E-Way Bill URL" + '?GSTIN=' + '05AAACE1268K1ZR' + '&EWBNO=' + ROBOOutput."Eway Bill No" + '&action=GETEWAYBILL';
             /*//12887 commneted ASSERTERROR ERROR coming IN cu67 compilation
             EwayPDFMessageID := EWayAPI.DownloadEwayBillPdf(URLtext,
                                           ROBOSetup."Eway Private Key",
