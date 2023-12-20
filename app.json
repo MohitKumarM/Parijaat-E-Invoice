@@ -2,7 +2,7 @@
   "id": "34123124-bbe7-4671-9e15-1ad14e4f5abf",
   "name": "Parijaat E Invoice",
   "publisher": "Default publisher",
-  "version": "1.1.0.0",
+  "version": "1.0.0.0",
   "brief": "",
   "description": "",
   "privacyStatement": "",
@@ -15,165 +15,165 @@
       "id": "c512d720-63b9-4b26-b062-a0c09b4ed322",
       "publisher": "Microsoft",
       "name": "Company Hub",
-      "version": "22.5.59966.60300"
+      "version": "23.0.12034.12802"
     }
     ,
     {
       "id": "437dbf0e-84ff-417a-965d-ed2bb9650972",
       "publisher": "Microsoft",
       "name": "Base Application",
-      "version": "22.5.59966.60699"
+      "version": "23.0.12034.14534"
     },
     {
       "id": "7819d79d-feea-4f09-bbed-5bbaca4bf323",
       "publisher": "Microsoft",
       "name": "Data Archive",
-      "version": "22.5.59966.60187"
+      "version": "23.0.12034.12802"
     },
     {
       "id": "08d69832-9231-429e-be2c-8bab2c96905b",
       "publisher": "Microsoft",
       "name": "Email - Current User Connector",
-      "version": "22.5.59966.60187"
+      "version": "23.0.12034.12802"
     },
     {
       "id": "aceb66c8-472e-437c-81d3-27e6c07d0f14",
       "publisher": "Microsoft",
       "name": "Email - Microsoft 365 Connector",
-      "version": "22.5.59966.60187"
+      "version": "23.0.12034.12802"
     },
     {
       "id": "e6328152-bb29-4664-9dae-3bc7eaae1fd8",
       "publisher": "Microsoft",
       "name": "Email - Outlook REST API",
-      "version": "22.5.59966.60187"
+      "version": "23.0.12034.12802"
     },
     {
       "id": "68e13fa3-217a-4be0-9141-99e5bf0ca818",
       "publisher": "Microsoft",
       "name": "Email - SMTP Connector",
-      "version": "22.5.59966.60187"
+      "version": "23.0.12034.12802"
     },
     {
       "id": "2a89f298-7ffd-44a5-a7ce-e08dac98abce",
       "publisher": "Microsoft",
       "name": "Essential Business Headlines",
-      "version": "22.5.59966.60187"
+      "version": "23.0.12034.12802"
     },
     {
       "id": "1150dd8d-51da-485a-bd4a-1ee98d78c21a",
       "publisher": "Microsoft",
       "name": "Fixed Asset Depreciation for India",
-      "version": "22.5.59966.60187"
+      "version": "23.0.12034.12802"
     },
     {
       "id": "2dc39818-e0f0-42b6-99eb-ba29dc5f4102",
       "publisher": "Microsoft",
       "name": "India Gate Entry",
-      "version": "22.5.59966.60187"
+      "version": "23.0.12034.12802"
     },
     {
       "id": "db643212-b7fb-4dd4-b5a8-cb44ac714461",
       "publisher": "Microsoft",
       "name": "India GST",
-      "version": "22.5.59966.60658"
+      "version": "23.0.12034.14435"
     },
     {
       "id": "050f6146-bffd-40de-942c-d0dd510ec20f",
       "publisher": "Microsoft",
       "name": "India Reports",
-      "version": "22.5.59966.60591"
+      "version": "23.0.12034.12802"
     },
     {
       "id": "eddcf82e-482c-49d1-836b-ad0284f2c5b0",
       "publisher": "Microsoft",
       "name": "India TCS",
-      "version": "22.5.59966.60187"
+      "version": "23.0.12034.12802"
     },
     {
       "id": "eae5779e-7797-4c4c-977e-7516652b7a65",
       "publisher": "Microsoft",
       "name": "India TDS",
-      "version": "22.5.59966.60187"
+      "version": "23.0.12034.12802"
     },
     {
       "id": "f1d9b696-156b-4251-b542-34e549fa80e9",
       "publisher": "Microsoft",
       "name": "India Voucher Interface",
-      "version": "22.5.59966.60187"
+      "version": "23.0.12034.12802"
     },
     {
       "id": "d3c551dd-5903-4194-b153-04ced9d29a2c",
       "publisher": "Microsoft",
       "name": "India Tax Base",
-      "version": "22.5.59966.60493"
+      "version": "23.0.12034.13840"
     },
     {
       "id": "7106d701-c601-4a5f-97c2-b8b323ae2c18",
       "publisher": "Microsoft",
       "name": "QR Generator",
-      "version": "22.5.59966.60187"
+      "version": "23.0.12034.12802"
     },
     {
       "id": "a53a4bb0-aa53-8ff8-77d6-fe3388db0eb8",
       "publisher": "Microsoft",
       "name": "Recommended Apps",
-      "version": "22.5.59966.60187"
+      "version": "23.0.12034.12802"
     },
     {
       "id": "c526b3e9-b8ca-4683-81ba-fcd5f6b1472a",
       "publisher": "Microsoft",
       "name": "Sales and Inventory Forecast",
-      "version": "22.5.59966.60187"
+      "version": "23.0.12034.12802"
     },
     {
       "id": "8c972578-fe72-4aa5-ae51-cc5575fef2ea",
       "publisher": "Microsoft",
       "name": "Send To Email Printer",
-      "version": "22.5.59966.60187"
+      "version": "23.0.12034.12802"
     },
     {
       "id": "79b1a79a-2f66-4736-bc1b-8abb3537eb51",
       "publisher": "Microsoft",
       "name": "Simplified Bank Statement Import",
-      "version": "22.5.59966.60187"
+      "version": "23.0.12034.12802"
     },
     {
       "id": "c1eafb3f-e397-468e-bdb4-ecc5c317ca00",
       "publisher": "Microsoft",
       "name": "Tax Engine",
-      "version": "22.5.59966.60187"
+      "version": "23.0.12034.12802"
     },
     {
       "id": "7961e9dc-a8e5-49b1-839b-3a78803a4cb8",
       "publisher": "Microsoft",
       "name": "Troubleshoot FA Ledger Entries",
-      "version": "22.5.59966.60187"
+      "version": "23.0.12034.12802"
     },
     {
       "id": "2654d7e7-9afd-4947-9e02-6bb8f3e0cd04",
       "publisher": "Microsoft",
       "name": "Universal Print Integration",
-      "version": "22.5.59966.60187"
+      "version": "23.0.12034.12802"
     }
  ,
     {
       "id": "ae492614-2dd6-4f94-b7c0-82e7a9cfd3a0",
       "name": "Parijat",
       "publisher": "TCPL",
-      "version": "1.0.0.10"
+      "version": "1.0.0.0"
     } ,
     {
       "id": "f29d6319-064f-430a-a863-35e2d983d58d",
       "name": "Pariajt Structure App",
       "publisher": "TCPL",
-      "version": "1.0.0.6"
+      "version": "1.0.0.0"
     }
     
   ],
   "screenshots": [],
   "platform": "1.0.0.0",
-  "application": "21.0.0.0",
+  "application": "23.0.0.0",
   "idRanges": [
     {
       "from": 50000,
@@ -185,7 +185,7 @@
     "allowDownloadingSource": true,
     "includeSourceInSymbolFile": true
   },
-  "runtime": "10.0",
+  "runtime": "12.0",
   "features": [
     "NoImplicitWith"
   ]
